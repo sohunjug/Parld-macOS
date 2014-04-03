@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>4D18AAAC-B5C8-4D47-92AF-ED392C0ECB48</string>
+	<key>IDESourceControlProjectName</key>
+	<string>ParldForMac</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>75D59D75-11A1-4AB6-9690-3FB2F60DD56D</key>
+		<string>http://git.maxfs.org/git/Parld_team/mac.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>ParldForMac/ParldForMac.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>75D59D75-11A1-4AB6-9690-3FB2F60DD56D</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>http://git.maxfs.org/git/Parld_team/mac.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>75D59D75-11A1-4AB6-9690-3FB2F60DD56D</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>75D59D75-11A1-4AB6-9690-3FB2F60DD56D</string>
+			<key>IDESourceControlWCCName</key>
+			<string>parld_mac (git)</string>
+		</dict>
+	</array>
+</dict>
+</plist>

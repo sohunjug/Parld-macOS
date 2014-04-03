@@ -1,0 +1,45 @@
+/* Localized versions of Info.plist keys */
+
+"play" = "播放";
+
+"stop" = "停止";
+
+"pause" = "暂停";
+
+"last" = "上一首";
+
+"next" = "下一首";
+
+"update music pool" = "更新音乐池";
+
+"cloud" = "云端";
+
+"launch at login" = "开机自动启动";
+
+"play at launch" = "启动自动播放";
+
+"appear suspension" = "显示悬浮窗";
+
+"disappear suspension" = "隐藏悬浮窗";
+
+"about" = "关于";
+
+"quit" = "退出";
+
+"connection error" = "您的网络连接出现问题，请重新确认已经连接！";
+
+"connection wrong" = "连接失败";
+
+"update" = "更新";
+
+"download" = "下载";
+
+"next time" = "下次提醒";
+
+"new" = "您有一个新版本可以下载！";
+
+"first" = "已经是第一首歌";
+
+"not" = "稍后";
+
+"first comment" = "您希望更新音乐池吗？";

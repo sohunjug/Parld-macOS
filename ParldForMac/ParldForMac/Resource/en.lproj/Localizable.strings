@@ -1,0 +1,45 @@
+/* Localized versions of Info.plist keys */
+
+"play" = "Play";
+
+"stop" = "Stop";
+
+"pause" = "Pause";
+
+"last" = "Last";
+
+"next" = "Next";
+
+"update music pool" = "Update Music Pool";
+
+"cloud" = "Cloud";
+
+"launch at login" = "Launch At Login";
+
+"play at launch" = "Play At Launch";
+
+"appear suspension" = "Appear Suspension";
+
+"disappear suspension" = "Disappear Suspension";
+
+"about" = "About";
+
+"quit" = "Quit";
+
+"connection error" = "Your internet connect has something wrong!\nPlease check your connection!";
+
+"connection wrong" = "Connection Wrong!";
+
+"update" = "Update";
+
+"download" = "Download";
+
+"next time" = "Next Time";
+
+"new" = "You can download a new version!";
+
+"first" = "First Song";
+
+"not" = "Not Now";
+
+"first comment" = "Do you want to update the music list?";
