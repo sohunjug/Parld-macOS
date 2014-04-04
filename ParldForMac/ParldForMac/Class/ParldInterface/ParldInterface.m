@@ -217,11 +217,13 @@ NSString * const parldBaseWebSite = @"http://www.parld.com";
     NSURL *url = [NSURL URLWithString:ParldUpload];
     NSMutableURLRequest *req = [[NSMutableURLRequest alloc] initWithURL:url];
     [req setHTTPMethod:@"POST"];
-    
     NSData *data = [NSData dataWithContentsOfFile:fileName];
+    
+    [req addValue:[NSString stringWithFormat:@"application/x-www-form-urlencoded"] forHTTPHeaderField: @"Content-Type"];
+    [req setValue:[NSString stringWithFormat:@"%lu", [data length]] forHTTPHeaderField:@"Content-Length"];
     [req addValue:[fileName lastPathComponent] forHTTPHeaderField:@"HTTP_FILENAME"];
     [req addValue:[fileName pathExtension] forHTTPHeaderField:@"HTTP_FILETYPE"];
-    [req addValue:[NSString stringWithFormat:@"%ld", [data length]] forHTTPHeaderField:@"HTTP_FILESIZE"];
+    [req addValue:[NSString stringWithFormat:@"%lu", [data length]] forHTTPHeaderField:@"HTTP_FILESIZE"];
     [req setHTTPBody:data];
     NSURLConnection *connection;
     connection = [[NSURLConnection alloc]initWithRequest:req delegate:self];

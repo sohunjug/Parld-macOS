@@ -650,6 +650,8 @@
         </menu>
         <customObject id="494" customClass="MusicAppDelegate">
             <connections>
+                <outlet property="about" destination="Dwq-TT-0Ok" id="WMX-Fr-7iJ"/>
+                <outlet property="imageView" destination="IcG-WF-HlJ" id="7mT-mq-rnX"/>
                 <outlet property="panel" destination="xdE-Sf-XVT" id="3Kj-e4-8jn"/>
             </connections>
         </customObject>
@@ -663,43 +665,19 @@
                 <rect key="frame" x="0.0" y="0.0" width="140" height="140"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IcG-WF-HlJ" customClass="MusicSuspension">
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IcG-WF-HlJ">
                         <rect key="frame" x="0.0" y="0.0" width="140" height="140"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" id="oH2-7L-4J6"/>
                     </imageView>
                     <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sUk-9L-f0S" customClass="MusicSuspension">
-                        <rect key="frame" x="35" y="35" width="70" height="70"/>
+                        <rect key="frame" x="38" y="38" width="64" height="64"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="B-NoShadow" id="xkI-jD-tFq"/>
                     </imageView>
                 </subviews>
             </view>
         </window>
-        <button focusRingType="none" id="7Sc-Cw-e9c">
-            <rect key="frame" x="0.0" y="0.0" width="166" height="22"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-            <buttonCell key="cell" type="bevel" title="Launch At Login" bezelStyle="regularSquare" image="uncheck" imagePosition="left" alignment="left" alternateImage="check" focusRingType="none" inset="2" id="7G0-fu-okX">
-                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                <font key="font" metaFont="system"/>
-                <string key="keyEquivalent">s</string>
-                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                <connections>
-                    <binding destination="KTy-UX-r6r" name="value" keyPath="launchAtLogin" id="O6V-wh-xS8"/>
-                </connections>
-            </buttonCell>
-        </button>
-        <button id="ih1-1v-FfL">
-            <rect key="frame" x="0.0" y="0.0" width="150" height="18"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-            <buttonCell key="cell" type="bevel" title="Play At Launch" bezelStyle="regularSquare" image="uncheck" imagePosition="left" alternateImage="check" inset="2" id="LZB-xa-3Z9">
-                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                <font key="font" metaFont="system"/>
-                <connections>
-                    <binding destination="M0A-hP-va9" name="value" keyPath="values.playAtLaunch" id="XTb-xl-jKq"/>
-                </connections>
-            </buttonCell>
-        </button>
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="Dwq-TT-0Ok" customClass="MusicAboutPanel">
             <windowStyleMask key="styleMask" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" topStrut="YES"/>
@@ -730,7 +708,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="416" height="77"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <textView importsGraphics="NO" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" spellingCorrection="YES" smartInsertDelete="YES" id="oyb-Pu-2HZ">
+                                <textView editable="NO" importsGraphics="NO" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" spellingCorrection="YES" smartInsertDelete="YES" id="oyb-Pu-2HZ">
                                     <rect key="frame" x="0.0" y="0.0" width="416" height="77"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -755,12 +733,15 @@
                 </subviews>
             </view>
         </window>
-        <customObject id="KTy-UX-r6r" customClass="LaunchAtLoginController"/>
-        <userDefaultsController representsSharedInstance="YES" id="M0A-hP-va9"/>
+        <customObject id="Jd1-rr-lkK" customClass="MusicAboutPanel">
+            <connections>
+                <outlet property="shortInfoField" destination="zCL-vL-66v" id="abf-a5-q8M"/>
+                <outlet property="textScrollView" destination="Azb-yV-8lt" id="AsN-Tc-HEZ"/>
+                <outlet property="textView" destination="oyb-Pu-2HZ" id="5PS-ch-oWn"/>
+            </connections>
+        </customObject>
     </objects>
     <resources>
         <image name="B-NoShadow" width="256" height="256"/>
-        <image name="check" width="19" height="16"/>
-        <image name="uncheck" width="19" height="16"/>
     </resources>
 </document>

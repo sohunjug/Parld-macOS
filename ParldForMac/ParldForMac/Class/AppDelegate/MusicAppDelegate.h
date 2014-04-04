@@ -14,5 +14,7 @@
     SPMediaKeyTap *keyTap;
 }
 @property (assign) IBOutlet NSPanel *panel;
+@property (assign) IBOutlet NSImageView *imageView;
+@property (assign) IBOutlet NSPanel *about;
 
 @end

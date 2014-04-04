@@ -7,3 +7,7 @@
 #ifdef __OBJC__
     #import <Cocoa/Cocoa.h>
 #endif
+
+#define W  70
+#define WC 32
+#define WO 16

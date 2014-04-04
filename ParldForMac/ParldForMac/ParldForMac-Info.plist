@@ -30,5 +30,7 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>MusicApplication</string>
+	<key>LSUIElement</key>
+	<true/>
 </dict>
 </plist>

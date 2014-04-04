@@ -10,7 +10,7 @@
 #import "AudioStreamer.h"
 #import "THUserNotification.h"
 
-typedef enum{
+typedef enum {
     MusicInit = 0,
     MusicPlaying,
     MusicPause,

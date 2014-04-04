@@ -48,6 +48,8 @@
 		3250127618C385BC0066B928 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3250127518C385BC0066B928 /* MainMenu.xib */; };
 		32CAC08918E8514D00C9A979 /* ParldInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 32CAC08818E8514D00C9A979 /* ParldInterface.m */; };
 		32CAC08D18ED154E00C9A979 /* MenuList.m in Sources */ = {isa = PBXBuildFile; fileRef = 32CAC08C18ED154E00C9A979 /* MenuList.m */; };
+		32CAC09118EEFE6900C9A979 /* InterfaceAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 32CAC09018EEFE6900C9A979 /* InterfaceAnimation.m */; };
+		32CAC09418EF15D900C9A979 /* MusicButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 32CAC09318EF15D900C9A979 /* MusicButtonView.m */; };
 		32CE29BC18E71C44005F866C /* MusicSuspension.m in Sources */ = {isa = PBXBuildFile; fileRef = 32CE29BB18E71C44005F866C /* MusicSuspension.m */; };
 		32CE29C018E7C94F005F866C /* MusicControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 32CE29BF18E7C94F005F866C /* MusicControl.m */; };
 /* End PBXBuildFile section */
@@ -137,6 +139,10 @@
 		32CAC08818E8514D00C9A979 /* ParldInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ParldInterface.m; path = ParldInterface/ParldInterface.m; sourceTree = "<group>"; };
 		32CAC08B18ED154E00C9A979 /* MenuList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MenuList.h; path = MenuList/MenuList.h; sourceTree = "<group>"; };
 		32CAC08C18ED154E00C9A979 /* MenuList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MenuList.m; path = MenuList/MenuList.m; sourceTree = "<group>"; };
+		32CAC08F18EEFE6900C9A979 /* InterfaceAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InterfaceAnimation.h; path = InterfaceAnimation/InterfaceAnimation.h; sourceTree = "<group>"; };
+		32CAC09018EEFE6900C9A979 /* InterfaceAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InterfaceAnimation.m; path = InterfaceAnimation/InterfaceAnimation.m; sourceTree = "<group>"; };
+		32CAC09218EF15D900C9A979 /* MusicButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MusicButtonView.h; path = InterfaceAnimation/MusicButtonView.h; sourceTree = "<group>"; };
+		32CAC09318EF15D900C9A979 /* MusicButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MusicButtonView.m; path = InterfaceAnimation/MusicButtonView.m; sourceTree = "<group>"; };
 		32CE29BA18E71C44005F866C /* MusicSuspension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicSuspension.h; sourceTree = "<group>"; };
 		32CE29BB18E71C44005F866C /* MusicSuspension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MusicSuspension.m; sourceTree = "<group>"; };
 		32CE29BE18E7C94F005F866C /* MusicControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MusicControl.h; path = Control/MusicControl.h; sourceTree = "<group>"; };
@@ -344,6 +350,7 @@
 		325011FC18C37E0C0066B928 /* Class */ = {
 			isa = PBXGroup;
 			children = (
+				32CAC08E18EEFE1700C9A979 /* InterfaceAnimation */,
 				32CAC08A18ED151C00C9A979 /* MenuList */,
 				32CAC08618E8509800C9A979 /* ParldInterface */,
 				32CE29BD18E7C933005F866C /* MusicControl */,
@@ -408,6 +415,17 @@
 				32CAC08C18ED154E00C9A979 /* MenuList.m */,
 			);
 			name = MenuList;
+			sourceTree = "<group>";
+		};
+		32CAC08E18EEFE1700C9A979 /* InterfaceAnimation */ = {
+			isa = PBXGroup;
+			children = (
+				32CAC08F18EEFE6900C9A979 /* InterfaceAnimation.h */,
+				32CAC09018EEFE6900C9A979 /* InterfaceAnimation.m */,
+				32CAC09218EF15D900C9A979 /* MusicButtonView.h */,
+				32CAC09318EF15D900C9A979 /* MusicButtonView.m */,
+			);
+			name = InterfaceAnimation;
 			sourceTree = "<group>";
 		};
 		32CE29B918E71C44005F866C /* Suspension */ = {
@@ -498,6 +516,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				32CAC09118EEFE6900C9A979 /* InterfaceAnimation.m in Sources */,
 				3250120D18C37E0C0066B928 /* SBJsonStreamParserAccumulator.m in Sources */,
 				3250120518C37E0C0066B928 /* ASIDataCompressor.m in Sources */,
 				3250121718C37E0C0066B928 /* NSObject+SPInvocationGrabbing.m in Sources */,
@@ -523,6 +542,7 @@
 				3250120F18C37E0C0066B928 /* SBJsonStreamParserState.m in Sources */,
 				3250123618C383200066B928 /* MusicApplication.m in Sources */,
 				3250121B18C37E0C0066B928 /* THUserNotification.m in Sources */,
+				32CAC09418EF15D900C9A979 /* MusicButtonView.m in Sources */,
 				32CAC08D18ED154E00C9A979 /* MenuList.m in Sources */,
 				3250121D18C37E0C0066B928 /* MusicAppDelegate.m in Sources */,
 				3250120918C37E0C0066B928 /* AudioStreamer.m in Sources */,

@@ -8,23 +8,36 @@
 
 #import "MusicAppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
-#import "MusicControl.h"
+#import "MenuList.h"
 #import "JSON.h"
+#import "ParldInterface.h"
+#import "InterfaceAnimation.h"
+#import <ApplicationServices/ApplicationServices.h>
 
 @implementation MusicAppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     // Insert code here to initialize your application
+    //ProcessSerialNumber psn = { 0, kCurrentProcess };
+    //TransformProcessType(&psn, kProcessTransformToForegroundApplication);
+    //SetFrontProcess(&psn);
+    
     [self.panel setViewsNeedDisplay:YES];
     [self.panel.contentView setWantsLayer:YES];
     self.panel.backgroundColor = [NSColor clearColor];
     [self.panel setOpaque:NO];
+    [NSApp activateIgnoringOtherApps:YES];
+    
+    [[NSUserDefaults standardUserDefaults] registerDefaults:
+     [NSDictionary dictionaryWithContentsOfFile:
+      [[NSBundle mainBundle] pathForResource:@"ParldConfig" ofType:@"plist"]]];
     
     keyTap = [[SPMediaKeyTap alloc] initWithDelegate:self];
 	if([SPMediaKeyTap usesGlobalMediaKeyTap])
 		[keyTap startWatchingMediaKeys];
     
+    [[InterfaceAnimation shareInstance] setParentView:_imageView];
 }
 
 -(void)mediaKeyTap:(SPMediaKeyTap*)keyTap receivedMediaKeyEvent:(NSEvent*)event;
@@ -57,6 +70,34 @@
                 
 		}
 	}
+}
+
+- (void)menuAction:(NSMenuItem*)item
+{
+    if ([item tag] == MenuAbout) {
+        [self.about center];
+        [self.about makeKeyAndOrderFront:nil];
+    }
+    else {
+        [[MenuList shareInstance] menuAction:item];
+    }
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem *)item
+{
+    return [[MenuList shareInstance] validateMenuItem:item];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if([keyPath isEqualToString:@"displaySuspension"])
+    {
+        [[MenuList shareInstance] displaySuspension] ? [self.panel orderOut:nil] : [self.panel makeKeyAndOrderFront:nil];
+    }
+    else
+    {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
 @end

@@ -9,5 +9,11 @@
 #import <Cocoa/Cocoa.h>
 
 @interface MusicAboutPanel : NSPanel
-
+{
+    IBOutlet NSScrollView		*textScrollView;
+    IBOutlet NSTextView			*textView;
+    IBOutlet NSTextField		*versionField;
+    IBOutlet NSTextField		*shortInfoField;
+    NSTimer						*scrollingTimer;
+}
 @end
