@@ -10,6 +10,7 @@
 #import "ParldInterface.h"
 
 static MusicControl *musicControl;
+static MusicControlValue * _Music_Control_Value_;
 
 @implementation MusicControlValue
 
@@ -35,24 +36,10 @@ static MusicControl *musicControl;
 
 + (MusicControlValue*)shareInstance
 {
-    Class aClass = NSClassFromString(@"MusicControlValue");
-    if (aClass == nil)
-    {
-        aClass = [self class];
+    if (_Music_Control_Value_ == nil) {
+        _Music_Control_Value_ = [[MusicControlValue alloc] init];
     }
-    
-    return [aClass valueCenter];
-}
-
-+ (MusicControlValue *)valueCenter
-{
-    static id instance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        instance = [[[self class] alloc] init];
-    });
-    
-    return instance;
+    return _Music_Control_Value_;
 }
 
 - (void)refresh
@@ -80,8 +67,7 @@ static MusicControl *musicControl;
 
 + (MusicControl *)shareMusicControl
 {
-    if (musicControl == nil)
-    {
+    if (musicControl == nil) {
         musicControl = [[MusicControl alloc] init];
     }
     return musicControl;
@@ -113,6 +99,7 @@ static MusicControl *musicControl;
                 break;
         }
         [[MusicControlValue shareInstance] setLastState:[[MusicControlValue shareInstance] nowState]];
+        if ([[[MusicControlValue shareInstance] musicList] count] != 0 || [[MusicControlValue shareInstance] nowState] == MusicStop) [self sendNotification];
     }
     else
     {
@@ -193,6 +180,10 @@ static MusicControl *musicControl;
 - (void)playMusic
 {
     [self createStreamer];
+    if ([[[MusicControlValue shareInstance] musicList] count] == 0) {
+        [self performSelector:@selector(playMusic) withObject:nil afterDelay:0.1];
+        //[self removeNotification:[THUserNotification notification]];
+    }
     [[[MusicControlValue shareInstance] streamer] start];
 }
 
@@ -254,5 +245,49 @@ static MusicControl *musicControl;
 		[[MusicControlValue shareInstance] setStreamer:nil];
 	}
 }
+
+- (void)sendNotification
+{
+    THUserNotification *notification = [THUserNotification notification];
+    notification.title = @"Parld";
+    notification.informativeText = [NSString stringWithFormat:@"[%@] %@ - %@", [[MusicControlValue shareInstance] nowState] == MusicPlaying ? NSLocalizedString(@"play", nil) : NSLocalizedString(@"stop", nil), (NSString*)[[[[MusicControlValue shareInstance] musicList] objectAtIndex:[[MusicControlValue shareInstance] playIndex]] valueForKey:@"name"], (NSString*)[[[[MusicControlValue shareInstance] musicList] objectAtIndex:[[MusicControlValue shareInstance] playIndex]] valueForKey:@"artist"]];
+    if ([[[ParldInterface shareInstance] musicPic] valueForKey:[[[[MusicControlValue shareInstance] musicList] objectAtIndex:[[MusicControlValue shareInstance] playIndex]] valueForKey:@"hash"]] != nil) {
+        //[suspensionView setImage:[[NSImage alloc] initWithData:self.musicpic]];
+        notification.contentImage = [[NSImage alloc] initWithData:[[[ParldInterface shareInstance] musicPic] valueForKey:[[[[MusicControlValue shareInstance] musicList] objectAtIndex:[[MusicControlValue shareInstance] playIndex]] valueForKey:@"hash"]]];
+    }
+    //设置通知提交的时间
+    notification.deliveryDate = [NSDate dateWithTimeIntervalSinceNow:1];
+    THUserNotificationCenter *center = [THUserNotificationCenter notificationCenter];
+    if ([center isKindOfClass:[THUserNotificationCenter class]]) {
+        center.centerType = THUserNotificationCenterTypeBanner;
+    }
+    //删除已经显示过的通知(已经存在用户的通知列表中的)
+    [center removeAllDeliveredNotifications];
+    //递交通知
+    [center deliverNotification:notification];
+    //设置通知的代理
+    [center setDelegate:self];
+    
+    [self performSelector:@selector(removeNotification:) withObject:notification afterDelay:5.0];
+}
+
+- (void)removeNotification:(NSUserNotification *)notification {
+    [[THUserNotificationCenter notificationCenter] removeDeliveredNotification:notification];
+}
+
+- (void)userNotificationCenter:(THUserNotificationCenter *)center didActivateNotification:(THUserNotification *)notification {
+    //    [self showMainWindow:nil];
+}
+
+
+- (void)userNotificationCenter:(THUserNotificationCenter *)center didDeliverNotification:(THUserNotification *)notification {
+    // do nothing
+}
+
+
+- (BOOL)userNotificationCenter:(THUserNotificationCenter *)center shouldPresentNotification:(THUserNotification *)notification {
+    return YES;
+}
+
 
 @end

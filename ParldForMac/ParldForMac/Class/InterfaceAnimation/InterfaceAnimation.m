@@ -21,25 +21,29 @@ static InterfaceAnimation * _interface_animation_;
     self = [super init];
     if (self) {
         //[self hideViews];
-        help = [[MusicButtonView alloc] initWithFrame:NSMakeRect(W-WO, W+WC, WO*2, WO*2)];
+        help = [[MusicButtonView alloc] initWithFrame:NSMakeRect(W-WO, W+WC, WO*2.3, WO*1.7)];
         [help setImage:[NSImage imageNamed:[NSString stringWithFormat:@"P4_4.png"]]];
         [help setTag:MenuHelp];
         [help setBordered:NO];
+        [[help cell] setImageScaling:NSImageScaleAxesIndependently];
         [help setAction:@selector(menuAction:)];
         last = [[MusicButtonView alloc] initWithFrame:NSMakeRect(W-WC-WO*2-3, W-WO, WO*2, WO*2)];
         [last setImage:[NSImage imageNamed:[NSString stringWithFormat:@"P4_2.png"]]];
         [last setTag:MenuLast];
         [last setBordered:NO];
+        [[last cell] setImageScaling:NSImageScaleAxesIndependently];
         [last setAction:@selector(menuAction:)];
         next = [[MusicButtonView alloc] initWithFrame:NSMakeRect(W+WC+3, W-WO, WO*2, WO*2)];
         [next setImage:[NSImage imageNamed:[NSString stringWithFormat:@"P4_1.png"]]];
         [next setTag:MenuNext];
         [next setBordered:NO];
+        [[next cell] setImageScaling:NSImageScaleAxesIndependently];
         [next setAction:@selector(menuAction:)];
         refresh = [[MusicButtonView alloc] initWithFrame:NSMakeRect(W-WO, W-WC-WO*2, WO*2, WO*2)];
         [refresh setImage:[NSImage imageNamed:[NSString stringWithFormat:@"P4_3.png"]]];
         [refresh setTag:MenuRefresh];
         [refresh setBordered:NO];
+        [[refresh cell] setImageScaling:NSImageScaleAxesIndependently];
         [refresh setAction:@selector(menuAction:)];
         
         _isDisplay = NO;
@@ -63,6 +67,7 @@ static InterfaceAnimation * _interface_animation_;
 {
     @synchronized(self){
         if ([keyPath isEqualToString:@"isDisplay"]) {
+            NSLog(@"%hhd", _isDisplay);
             _isDisplay ? [self showMenu] : [self hideMenu];
         }
         else {
@@ -73,16 +78,14 @@ static InterfaceAnimation * _interface_animation_;
 
 - (void)showMenu
 {
-    NSLog(@"yes");
     if (done)
         [self showViews];
-    else
-        [self cancelHide];
+    
+    [self cancelHide];
 }
 
 - (void)hideMenu
 {
-    NSLog(@"no");
     [self cancelHide];
     [self checkHide];
 }

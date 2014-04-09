@@ -12,9 +12,6 @@
 #import "ParldInterface.h"
 #import "InterfaceAnimation.h"
 
-static NSInteger enter = 0;
-static NSInteger exitd = 0;
-
 @implementation MusicSuspension
 
 - (id)initWithFrame:(NSRect)frame
@@ -61,14 +58,16 @@ static NSInteger exitd = 0;
 
 - (void)mouseEntered:(NSEvent *)theEvent
 {
-    NSLog(@"enter:%ld", (long)enter++);
+    [[[ParldInterface shareInstance] LOCK] lock];
     [[InterfaceAnimation shareInstance] setIsDisplay:YES];
+    [[[ParldInterface shareInstance] LOCK] unlock];
 }
 
 - (void)mouseExited:(NSEvent *)theEvent
 {
-    NSLog(@"exitd:%ld", (long)exitd++);
+    [[[ParldInterface shareInstance] LOCK] lock];
     [[InterfaceAnimation shareInstance] setIsDisplay:NO];
+    [[[ParldInterface shareInstance] LOCK] unlock];
 }
 
 - (void)createTrackingArea

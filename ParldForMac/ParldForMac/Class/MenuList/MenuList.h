@@ -23,7 +23,11 @@ typedef enum {
     MenuLaunchAtLogin,
     MenuHelp,
     MenuAbout,
-    MenuExit
+    MenuExit,
+    MenuUpload,
+    MenuUploadDone,
+    MenuUploadFail,
+    MenuUploadWaiting
 }MMenuListAction;
 
 @interface MenuList : NSObject

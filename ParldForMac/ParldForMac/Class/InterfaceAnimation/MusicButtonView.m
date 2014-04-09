@@ -8,6 +8,7 @@
 
 #import "MusicButtonView.h"
 #import "InterfaceAnimation.h"
+#import "ParldInterface.h"
 
 @implementation MusicButtonView
 
@@ -17,6 +18,7 @@
     if (self) {
         [self.window setLevel:NSFloatingWindowLevel];
         [self createTrackingArea];
+        first = NO;
     }
     return self;
 }
@@ -28,12 +30,20 @@
 
 - (void)mouseEntered:(NSEvent *)theEvent
 {
+    [[[ParldInterface shareInstance] LOCK] lock];
     [[InterfaceAnimation shareInstance] setIsDisplay:YES];
+    first = YES;
+    [[[ParldInterface shareInstance] LOCK] unlock];
 }
 
 - (void)mouseExited:(NSEvent *)theEvent
 {
-    [[InterfaceAnimation shareInstance] setIsDisplay:NO];
+    [[[ParldInterface shareInstance] LOCK] lock];
+    if (first) {
+        [[InterfaceAnimation shareInstance] setIsDisplay:NO];
+        first = NO;
+    }
+    [[[ParldInterface shareInstance] LOCK] unlock];
 }
 
 - (void)createTrackingArea

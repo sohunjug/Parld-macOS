@@ -35,7 +35,7 @@
 
 
 - (NSRect)resizeAreaRect {
-    const CGFloat resizeBoxSize = 20.0;
+    const CGFloat resizeBoxSize = 0.0;
     
     // 窗口右下角 20x20 的区域为改变窗口的区域
     NSRect frame = [self frame];

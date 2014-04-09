@@ -39,7 +39,7 @@ typedef enum {
 
 @end
 
-@interface MusicControl : NSObject
+@interface MusicControl : NSObject <THUserNotificationCenterDelegate>
 
 + (MusicControl *)shareMusicControl;
 - (void)playOrPause;

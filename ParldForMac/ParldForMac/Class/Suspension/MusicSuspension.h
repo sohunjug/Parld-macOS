@@ -15,6 +15,9 @@
 @end
 
 @interface MusicSuspension : NSImageView
+{
+    NSLock* LOCK;
+}
 
 @property (assign) IBOutlet id<DragDropDelegate> musicControl;
 

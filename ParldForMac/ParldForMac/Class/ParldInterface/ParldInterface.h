@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ASIHTTPRequest.h"
+#import "THUserNotification.h"
 
 #define ParldWebSite [[ParldInterface shareInstance] webSite] == nil ? parldBaseWebSite : [[ParldInterface shareInstance] webSite]
 
@@ -22,7 +23,7 @@
 
 extern NSString * const parldBaseWebSite;
 
-@interface ParldInterface : NSObject
+@interface ParldInterface : NSObject <THUserNotificationCenterDelegate>
 {
     NSThread *thread;
     NSArray *musicList;
@@ -32,10 +33,14 @@ extern NSString * const parldBaseWebSite;
     NSString *onlineKey;
     ASIHTTPRequest *request;
     NSMutableData *recivedata;
+    
+    NSLock* LOCK;
 }
 
 @property (retain) NSString *webSite;
 @property (retain) NSThread *thread;
+@property (retain) NSLock *LOCK;
+@property (retain) NSDictionary *musicPic;
 
 + (ParldInterface*)shareInstance;
 + (NSString*)WebSite;

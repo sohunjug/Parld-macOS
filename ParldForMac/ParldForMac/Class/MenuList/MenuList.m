@@ -50,7 +50,7 @@ static MenuList * _menuList;
     
     statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
     
-    [statusItem setImage:[NSImage imageNamed:@"16"]];
+    [statusItem setImage:[NSImage imageNamed:@"systemBar"]];
     [[statusItem image] setScalesWhenResized:NO];
     [statusItem setHighlightMode:NO];
     [statusItem setTitle:@""];
@@ -103,6 +103,11 @@ static MenuList * _menuList;
     [newItem setTag:MenuCloud];
     [listTemp setObject:newItem forKey:@"online"];
     
+    newItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:NSLocalizedString(@"upload", nil) action:@selector(menuAction:) keyEquivalent:@""];
+    [newItem setEnabled:YES];
+    [newItem setTag:MenuUpload];
+    [listTemp setObject:newItem forKey:@"upload"];
+    
     newItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:NSLocalizedString(@"launch at login", nil) action:@selector(menuAction:) keyEquivalent:@""];
     [newItem setEnabled:YES];
     [newItem setTag:MenuLaunchAtLogin];
@@ -137,6 +142,7 @@ static MenuList * _menuList;
     [systemBarMenu addItem:[NSMenuItem separatorItem]];
     [systemBarMenu addItem:[menuList objectForKey:@"update"]];
     [systemBarMenu addItem:[menuList objectForKey:@"online"]];
+    [systemBarMenu addItem:[menuList objectForKey:@"upload"]];
     [systemBarMenu addItem:[NSMenuItem separatorItem]];
     [systemBarMenu addItem:[menuList objectForKey:@"launchatlogin"]];
     [systemBarMenu addItem:[menuList objectForKey:@"playatlaunch"]];
@@ -149,6 +155,7 @@ static MenuList * _menuList;
     
     [suspensionMenu addItem:[[menuList objectForKey:@"update"] copy]];
     [suspensionMenu addItem:[[menuList objectForKey:@"online"] copy]];
+    [suspensionMenu addItem:[[menuList objectForKey:@"upload"] copy]];
     [suspensionMenu addItem:[NSMenuItem separatorItem]];
     [suspensionMenu addItem:[[menuList objectForKey:@"displaySuspension"] copy]];
     [suspensionMenu addItem:[[menuList objectForKey:@"about"] copy]];

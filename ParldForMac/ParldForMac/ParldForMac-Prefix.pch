@@ -9,5 +9,13 @@
 #endif
 
 #define W  70
-#define WC 32
-#define WO 16
+#define WC 40
+#define WO 10
+
+#define PROGRESS_X 20
+#define PROGRESS_Y 280
+#define PROGRESS_W 258
+#define PROGRESS_H 20
+#define PROGRESS_M 10
+#define PROGRESS_S 26
+#define PROGRESS_P 180

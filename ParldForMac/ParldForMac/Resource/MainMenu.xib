@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment version="1090" defaultVersion="1070" identifier="macosx"/>
         <development version="5100" identifier="xcode"/>
@@ -653,6 +653,7 @@
                 <outlet property="about" destination="Dwq-TT-0Ok" id="WMX-Fr-7iJ"/>
                 <outlet property="imageView" destination="IcG-WF-HlJ" id="7mT-mq-rnX"/>
                 <outlet property="panel" destination="xdE-Sf-XVT" id="3Kj-e4-8jn"/>
+                <outlet property="progress" destination="SAt-zq-B4Q" id="8LQ-aO-1ht"/>
             </connections>
         </customObject>
         <customObject id="420" customClass="NSFontManager"/>
@@ -665,15 +666,18 @@
                 <rect key="frame" x="0.0" y="0.0" width="140" height="140"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IcG-WF-HlJ">
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="IcG-WF-HlJ">
                         <rect key="frame" x="0.0" y="0.0" width="140" height="140"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" id="oH2-7L-4J6"/>
                     </imageView>
-                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sUk-9L-f0S" customClass="MusicSuspension">
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="sUk-9L-f0S" customClass="MusicSuspension">
                         <rect key="frame" x="38" y="38" width="64" height="64"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="B-NoShadow" id="xkI-jD-tFq"/>
+                        <connections>
+                            <outlet property="musicControl" destination="494" id="pFL-7D-m3f"/>
+                        </connections>
                     </imageView>
                 </subviews>
             </view>
@@ -687,12 +691,12 @@
                 <rect key="frame" x="0.0" y="0.0" width="584" height="159"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <imageView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Vhi-1J-xfr">
+                    <imageView id="Vhi-1J-xfr">
                         <rect key="frame" x="20" y="19" width="120" height="120"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="B-NoShadow" id="Z0U-5S-ioJ"/>
                     </imageView>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zCL-vL-66v">
+                    <textField verticalHuggingPriority="750" id="zCL-vL-66v">
                         <rect key="frame" x="146" y="113" width="416" height="17"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" id="9rL-jV-p4v">
@@ -701,7 +705,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <scrollView fixedFrame="YES" placeholderIntrinsicWidth="416" placeholderIntrinsicHeight="77" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Azb-yV-8lt">
+                    <scrollView placeholderIntrinsicWidth="416" placeholderIntrinsicHeight="77" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="Azb-yV-8lt">
                         <rect key="frame" x="148" y="19" width="416" height="77"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <clipView key="contentView" placeholderIntrinsicWidth="416" placeholderIntrinsicHeight="77" id="oJr-9l-T7E">
@@ -740,6 +744,15 @@
                 <outlet property="textView" destination="oyb-Pu-2HZ" id="5PS-ch-oWn"/>
             </connections>
         </customObject>
+        <customObject id="95O-DJ-GzE" customClass="MusicProgressPanel">
+            <connections>
+                <outlet property="view" destination="SAt-zq-B4Q" id="NQl-74-X3s"/>
+            </connections>
+        </customObject>
+        <view id="SAt-zq-B4Q">
+            <rect key="frame" x="0.0" y="0.0" width="267" height="339"/>
+            <autoresizingMask key="autoresizingMask"/>
+        </view>
     </objects>
     <resources>
         <image name="B-NoShadow" width="256" height="256"/>

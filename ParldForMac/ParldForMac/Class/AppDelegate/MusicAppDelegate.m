@@ -13,6 +13,7 @@
 #import "ParldInterface.h"
 #import "InterfaceAnimation.h"
 #import <ApplicationServices/ApplicationServices.h>
+#import "MusicProgressPanel.h"
 
 @implementation MusicAppDelegate
 
@@ -38,6 +39,10 @@
 		[keyTap startWatchingMediaKeys];
     
     [[InterfaceAnimation shareInstance] setParentView:_imageView];
+    showProgress = NO;
+    
+    [[MusicProgressPanel shareInstance] addObserver:self forKeyPath:@"usedProgress" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
+    [ParldInterface shareInstance];
 }
 
 -(void)mediaKeyTap:(SPMediaKeyTap*)keyTap receivedMediaKeyEvent:(NSEvent*)event;
@@ -67,9 +72,65 @@
 			default:
                 break;
                 // More cases defined in hidsystem/ev_keymap.h
-                
 		}
 	}
+}
+
+- (void)dragDropFileList:(NSArray *)fileList
+{
+    [self performSelector:@selector(uploadFileList:) withObject:fileList afterDelay:0];
+}
+
+- (void)uploadFileList:(NSArray *)fileList
+{
+    if(!fileList || [fileList count] <= 0) return;
+    
+    //while ([[MusicProgressPanel shareInstance] initDone] == NO) {
+    //    [[MusicProgressPanel shareInstance] initDic];
+    //}
+    //[self.progress makeKeyAndOrderFront:nil];
+    [self showProgressPanel];
+    
+    [[[MusicProgressPanel shareInstance] waiting] addObjectsFromArray:fileList];
+    for (NSString* temp in [[MusicProgressPanel shareInstance] waiting]) {
+        [[[[MusicProgressPanel shareInstance] progressPopUpButton] objectForKey:@"Waiting"] addItemWithTitle:[temp lastPathComponent]];//action:@selector(openInFinder:) keyEquivalent:@""];
+        [[[MusicProgressPanel shareInstance] filePath] setObject:temp forKey:[temp lastPathComponent]];
+    }
+    if ([[MusicProgressPanel shareInstance] usedProgress] < 4) {
+        [[ParldInterface shareInstance] uploadMusic:[[[MusicProgressPanel shareInstance] waiting] objectAtIndex:0]];
+        [[[[MusicProgressPanel shareInstance] progressPopUpButton] objectForKey:@"Waiting"] removeItemWithTitle:[[[MusicProgressPanel shareInstance] waiting] objectAtIndex:0]];
+        [[[MusicProgressPanel shareInstance] waiting] removeObjectAtIndex:0];
+    }
+}
+
+- (void)initProgressPanel
+{
+    if (!attachedWindow) {
+        [[MusicProgressPanel shareInstance] initDic];
+        NSPoint buttonPoint = NSMakePoint(NSMidX([self.imageView frame]),
+                                          NSMidY([self.imageView frame]));
+        attachedWindow = [[MAAttachedWindow alloc] initWithView:self.progress
+                                                attachedToPoint:buttonPoint
+                                                       inWindow:[self.imageView window]
+                                                         onSide:12
+                                                     atDistance:WC+WO*2];
+        [attachedWindow setBorderColor:[NSColor whiteColor]];
+        [attachedWindow setHasArrow:YES];
+        [attachedWindow setDrawsRoundCornerBesideArrow:YES];
+        [attachedWindow setArrowBaseWidth:5.0];
+    }
+}
+
+- (void)showProgressPanel
+{
+    [self initProgressPanel];
+    [[self.imageView window] addChildWindow:attachedWindow ordered:NSWindowAbove];
+}
+
+- (void)hideProgressPanel
+{
+    [[self.imageView window] removeChildWindow:attachedWindow];
+    [attachedWindow orderOut:self];
 }
 
 - (void)menuAction:(NSMenuItem*)item
@@ -77,6 +138,9 @@
     if ([item tag] == MenuAbout) {
         [self.about center];
         [self.about makeKeyAndOrderFront:nil];
+    }
+    else if ([item tag] == MenuUpload) {
+        [self showProgressPanel];
     }
     else {
         [[MenuList shareInstance] menuAction:item];
@@ -90,14 +154,25 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if([keyPath isEqualToString:@"displaySuspension"])
-    {
+    if ([keyPath isEqualToString:@"displaySuspension"]) {
         [[MenuList shareInstance] displaySuspension] ? [self.panel orderOut:nil] : [self.panel makeKeyAndOrderFront:nil];
     }
-    else
-    {
+    else if ([keyPath isEqualToString:@"usedProgress"]) {
+        if ([[MusicProgressPanel shareInstance] usedProgress] < 4 && [[[MusicProgressPanel shareInstance] waiting] count] > 0) {
+            [[ParldInterface shareInstance] uploadMusic:[[[MusicProgressPanel shareInstance] waiting] objectAtIndex:0]];
+            [[[[MusicProgressPanel shareInstance] progressPopUpButton] objectForKey:@"Waiting"] removeItemWithTitle:[[[[MusicProgressPanel shareInstance] waiting] objectAtIndex:0] lastPathComponent]];
+            [[[MusicProgressPanel shareInstance] waiting] removeObjectAtIndex:0];
+        }
+    }
+    else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
+}
+
+- (void)openInFinder:(NSMenuItem*)item
+{
+    NSString *exepath = [NSString stringWithFormat:@"/usr/bin/open -R %@", [[[MusicProgressPanel shareInstance] filePath] objectForKey:[item title]]];
+    execl([exepath UTF8String], NULL);
 }
 
 @end

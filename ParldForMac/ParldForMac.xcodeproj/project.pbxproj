@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		321B1A0418F501D90098914E /* MAAttachedWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 321B1A0318F501D90098914E /* MAAttachedWindow.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3250118218C37D770066B928 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3250118118C37D770066B928 /* Cocoa.framework */; };
 		3250118E18C37D770066B928 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3250118D18C37D770066B928 /* main.m */; };
 		3250120118C37E0C0066B928 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 325011B818C37E0C0066B928 /* Credits.rtf */; };
@@ -50,11 +51,16 @@
 		32CAC08D18ED154E00C9A979 /* MenuList.m in Sources */ = {isa = PBXBuildFile; fileRef = 32CAC08C18ED154E00C9A979 /* MenuList.m */; };
 		32CAC09118EEFE6900C9A979 /* InterfaceAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 32CAC09018EEFE6900C9A979 /* InterfaceAnimation.m */; };
 		32CAC09418EF15D900C9A979 /* MusicButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 32CAC09318EF15D900C9A979 /* MusicButtonView.m */; };
+		32CAC09918F0342A00C9A979 /* ASIDownloadCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 32CAC09618F0342A00C9A979 /* ASIDownloadCache.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		32CAC09A18F0342A00C9A979 /* ASIFormDataRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 32CAC09818F0342A00C9A979 /* ASIFormDataRequest.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		32CAC0A118F051C800C9A979 /* MusicProgressPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 32CAC0A018F051C800C9A979 /* MusicProgressPanel.m */; };
 		32CE29BC18E71C44005F866C /* MusicSuspension.m in Sources */ = {isa = PBXBuildFile; fileRef = 32CE29BB18E71C44005F866C /* MusicSuspension.m */; };
 		32CE29C018E7C94F005F866C /* MusicControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 32CE29BF18E7C94F005F866C /* MusicControl.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		321B1A0218F501D90098914E /* MAAttachedWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAAttachedWindow.h; sourceTree = "<group>"; };
+		321B1A0318F501D90098914E /* MAAttachedWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAAttachedWindow.m; sourceTree = "<group>"; };
 		3250117E18C37D770066B928 /* ParldForMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ParldForMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3250118118C37D770066B928 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		3250118418C37D770066B928 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -143,6 +149,12 @@
 		32CAC09018EEFE6900C9A979 /* InterfaceAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InterfaceAnimation.m; path = InterfaceAnimation/InterfaceAnimation.m; sourceTree = "<group>"; };
 		32CAC09218EF15D900C9A979 /* MusicButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MusicButtonView.h; path = InterfaceAnimation/MusicButtonView.h; sourceTree = "<group>"; };
 		32CAC09318EF15D900C9A979 /* MusicButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MusicButtonView.m; path = InterfaceAnimation/MusicButtonView.m; sourceTree = "<group>"; };
+		32CAC09518F0342A00C9A979 /* ASIDownloadCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIDownloadCache.h; sourceTree = "<group>"; };
+		32CAC09618F0342A00C9A979 /* ASIDownloadCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASIDownloadCache.m; sourceTree = "<group>"; };
+		32CAC09718F0342A00C9A979 /* ASIFormDataRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIFormDataRequest.h; sourceTree = "<group>"; };
+		32CAC09818F0342A00C9A979 /* ASIFormDataRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASIFormDataRequest.m; sourceTree = "<group>"; };
+		32CAC09F18F051C800C9A979 /* MusicProgressPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MusicProgressPanel.h; path = ProgressIndicator/MusicProgressPanel.h; sourceTree = "<group>"; };
+		32CAC0A018F051C800C9A979 /* MusicProgressPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MusicProgressPanel.m; path = ProgressIndicator/MusicProgressPanel.m; sourceTree = "<group>"; };
 		32CE29BA18E71C44005F866C /* MusicSuspension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicSuspension.h; sourceTree = "<group>"; };
 		32CE29BB18E71C44005F866C /* MusicSuspension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MusicSuspension.m; sourceTree = "<group>"; };
 		32CE29BE18E7C94F005F866C /* MusicControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MusicControl.h; path = Control/MusicControl.h; sourceTree = "<group>"; };
@@ -166,6 +178,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		321B1A0118F501D90098914E /* MAAttachedWindow */ = {
+			isa = PBXGroup;
+			children = (
+				321B1A0218F501D90098914E /* MAAttachedWindow.h */,
+				321B1A0318F501D90098914E /* MAAttachedWindow.m */,
+			);
+			path = MAAttachedWindow;
+			sourceTree = "<group>";
+		};
 		3250117518C37D770066B928 = {
 			isa = PBXGroup;
 			children = (
@@ -244,6 +265,7 @@
 		325011BF18C37E0C0066B928 /* External */ = {
 			isa = PBXGroup;
 			children = (
+				321B1A0118F501D90098914E /* MAAttachedWindow */,
 				325011C018C37E0C0066B928 /* ASIHTTPRequest */,
 				325011CD18C37E0C0066B928 /* AudioStreamer */,
 				325011D018C37E0C0066B928 /* JSON */,
@@ -257,6 +279,10 @@
 		325011C018C37E0C0066B928 /* ASIHTTPRequest */ = {
 			isa = PBXGroup;
 			children = (
+				32CAC09518F0342A00C9A979 /* ASIDownloadCache.h */,
+				32CAC09618F0342A00C9A979 /* ASIDownloadCache.m */,
+				32CAC09718F0342A00C9A979 /* ASIFormDataRequest.h */,
+				32CAC09818F0342A00C9A979 /* ASIFormDataRequest.m */,
 				325011C118C37E0C0066B928 /* ASICacheDelegate.h */,
 				325011C218C37E0C0066B928 /* ASIDataCompressor.h */,
 				325011C318C37E0C0066B928 /* ASIDataCompressor.m */,
@@ -350,6 +376,7 @@
 		325011FC18C37E0C0066B928 /* Class */ = {
 			isa = PBXGroup;
 			children = (
+				32CAC09B18F04F7200C9A979 /* ProgressIndicator */,
 				32CAC08E18EEFE1700C9A979 /* InterfaceAnimation */,
 				32CAC08A18ED151C00C9A979 /* MenuList */,
 				32CAC08618E8509800C9A979 /* ParldInterface */,
@@ -426,6 +453,15 @@
 				32CAC09318EF15D900C9A979 /* MusicButtonView.m */,
 			);
 			name = InterfaceAnimation;
+			sourceTree = "<group>";
+		};
+		32CAC09B18F04F7200C9A979 /* ProgressIndicator */ = {
+			isa = PBXGroup;
+			children = (
+				32CAC09F18F051C800C9A979 /* MusicProgressPanel.h */,
+				32CAC0A018F051C800C9A979 /* MusicProgressPanel.m */,
+			);
+			name = ProgressIndicator;
 			sourceTree = "<group>";
 		};
 		32CE29B918E71C44005F866C /* Suspension */ = {
@@ -516,6 +552,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				32CAC09A18F0342A00C9A979 /* ASIFormDataRequest.m in Sources */,
+				32CAC09918F0342A00C9A979 /* ASIDownloadCache.m in Sources */,
 				32CAC09118EEFE6900C9A979 /* InterfaceAnimation.m in Sources */,
 				3250120D18C37E0C0066B928 /* SBJsonStreamParserAccumulator.m in Sources */,
 				3250120518C37E0C0066B928 /* ASIDataCompressor.m in Sources */,
@@ -531,6 +569,7 @@
 				3250120618C37E0C0066B928 /* ASIDataDecompressor.m in Sources */,
 				3250121618C37E0C0066B928 /* LaunchAtLoginController.m in Sources */,
 				3250120B18C37E0C0066B928 /* SBJsonParser.m in Sources */,
+				32CAC0A118F051C800C9A979 /* MusicProgressPanel.m in Sources */,
 				3250121018C37E0C0066B928 /* SBJsonStreamWriter.m in Sources */,
 				3250120C18C37E0C0066B928 /* SBJsonStreamParser.m in Sources */,
 				3250121218C37E0C0066B928 /* SBJsonStreamWriterState.m in Sources */,
@@ -541,6 +580,7 @@
 				3250121518C37E0C0066B928 /* SBJsonWriter.m in Sources */,
 				3250120F18C37E0C0066B928 /* SBJsonStreamParserState.m in Sources */,
 				3250123618C383200066B928 /* MusicApplication.m in Sources */,
+				321B1A0418F501D90098914E /* MAAttachedWindow.m in Sources */,
 				3250121B18C37E0C0066B928 /* THUserNotification.m in Sources */,
 				32CAC09418EF15D900C9A979 /* MusicButtonView.m in Sources */,
 				32CAC08D18ED154E00C9A979 /* MenuList.m in Sources */,

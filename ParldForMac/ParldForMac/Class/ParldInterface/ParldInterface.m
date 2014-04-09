@@ -8,14 +8,18 @@
 
 #import "ParldInterface.h"
 #import "SBJson.h"
+#import "ASIFormDataRequest.h"
+#import "MusicProgressPanel.h"
 
 static ParldInterface * parldInterface;
 NSString * const parldBaseWebSite = @"http://www.parld.com";
 
 @implementation ParldInterface
 
+@synthesize LOCK = LOCK;
 @synthesize thread;
 @synthesize webSite;
+@synthesize musicPic = musicPic;
 
 + (ParldInterface *)shareInstance
 {
@@ -36,6 +40,7 @@ NSString * const parldBaseWebSite = @"http://www.parld.com";
     if (parldInterface != nil)
         return parldInterface;
     if (self = [super init]) {
+        LOCK = [[NSLock alloc] init];
         thread = [[NSThread alloc]
                   initWithTarget:self
                   selector:@selector(initMainThread)
@@ -88,6 +93,7 @@ NSString * const parldBaseWebSite = @"http://www.parld.com";
     NSError *error;
     SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
     musicList = [jsonParser objectWithString:[theRequest responseString] error:&error];
+    NSLog(@"%@", ParldWebSite);
     [self performSelector:@selector(getAllMusicPicFunction) onThread:thread withObject:nil waitUntilDone:NO];
 }
 
@@ -209,49 +215,128 @@ NSString * const parldBaseWebSite = @"http://www.parld.com";
 
 - (void)uploadMusic:(NSString *)fileName
 {
-    [self performSelector:@selector(uploadMusic:) onThread:thread withObject:fileName waitUntilDone:NO];
+    [self performSelector:@selector(uploadMusicFunction:) onThread:thread withObject:fileName waitUntilDone:NO];
 }
 
 - (void)uploadMusicFunction:(NSString *)fileName
 {
     NSURL *url = [NSURL URLWithString:ParldUpload];
-    NSMutableURLRequest *req = [[NSMutableURLRequest alloc] initWithURL:url];
-    [req setHTTPMethod:@"POST"];
     NSData *data = [NSData dataWithContentsOfFile:fileName];
+    ASIFormDataRequest *req = [ASIFormDataRequest requestWithURL:url];
+    [req addRequestHeader:@"FILENAME" value:[fileName lastPathComponent]];
+    [req addRequestHeader:@"FILETYPE" value:[fileName pathExtension]];
+    [req addRequestHeader:@"FILESIZE" value:[NSString stringWithFormat:@"%lu", [data length]]];
+    [req addRequestHeader:@"Content-Length" value:[NSString stringWithFormat:@"%lu", [data length]]];
+    //[req addRequestHeader:@"FILEPATH" value:fileName];
+
+    NSArray *allKeys = [[[MusicProgressPanel shareInstance] progressDic] allKeys];
+    NSArray *sortKeys = [allKeys sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+    BOOL isDone = YES;
+    while (isDone) {
+        for (id obj in sortKeys)
+        {
+            id progressTemp = [[[MusicProgressPanel shareInstance] progressDic] objectForKey:obj];
+            NSLog(@"%@", [progressTemp objectForKey:@"isUsed"]);
+            if ([[progressTemp objectForKey:@"isUsed"] isEqualToString:@"NO"]) {
+                [LOCK lock];
+                [progressTemp setObject:@"YES" forKey:@"isUsed"];
+                [progressTemp setObject:req forKey:@"request"];
+                [[progressTemp objectForKey:@"title"] setStringValue:[fileName lastPathComponent]];
+                [[progressTemp objectForKey:@"title"] setHidden:NO];
+                [[progressTemp objectForKey:@"progress"] setHidden:NO];
+                [[progressTemp objectForKey:@"progressValue"] setHidden:NO];
+                [req setUploadProgressDelegate:[progressTemp objectForKey:@"progress"]];
+                [[MusicProgressPanel shareInstance] setUsedProgress:[[MusicProgressPanel shareInstance] usedProgress] + 1];
+                isDone = NO;
+                //sleep(1);
+                [LOCK unlock];
+                break;
+            }
+        }
+    }
+    [req setShowAccurateProgress:YES];
+    [req setPostBody:[NSMutableData dataWithData:data]];
+    [req setTimeOutSeconds:1200];
+    [req setDelegate:self];
+    [req setDidFinishSelector:@selector(uploadFinished:)];
+    [req setDidFailSelector:@selector(uploadFailed:)];
+    [req startAsynchronous];
+}
+
+- (void)uploadFailed:(ASIFormDataRequest*)req
+{
+    [self performSelector:@selector(sendNotification:withNotification:) withObject:[[req requestHeaders] objectForKey:@"FILENAME"] withObject:@"Fail"];
+    [LOCK lock];
+    [[MusicProgressPanel shareInstance] setUsedProgress:[[MusicProgressPanel shareInstance] usedProgress] - 1];
+    [[[[MusicProgressPanel shareInstance] progressPopUpButton] objectForKey:@"Fail"] addItemWithTitle:[[req requestHeaders] objectForKey:@"FILENAME"]];// action:@selector(openInFinder:) keyEquivalent:@""];
+    [self updateProgressState:req];
+    [LOCK unlock];
+}
+
+- (void)uploadFinished:(ASIFormDataRequest*)req
+{
+    [self performSelector:@selector(sendNotification:withNotification:) withObject:[[req requestHeaders] objectForKey:@"FILENAME"] withObject:@"Done"];
+    [LOCK lock];
+    [[MusicProgressPanel shareInstance] setUsedProgress:[[MusicProgressPanel shareInstance] usedProgress] - 1];
+    [[[[MusicProgressPanel shareInstance] progressPopUpButton] objectForKey:@"Done"] addItemWithTitle:[[req requestHeaders] objectForKey:@"FILENAME"]];// action:@selector(openInFinder:) keyEquivalent:@""];
+    [self updateProgressState:req];
+    [LOCK unlock];
+}
+
+- (void)updateProgressState:(ASIFormDataRequest*)req
+{
+    NSEnumerator * enumerator = [[[MusicProgressPanel shareInstance] progressDic] keyEnumerator];
+    id obj;
+    while (obj = [enumerator nextObject])
+    {
+        id progressTemp = [[[MusicProgressPanel shareInstance] progressDic] objectForKey:obj];
+        if (req == [progressTemp objectForKey:@"request"]) {
+            [progressTemp setObject:@"NO" forKey:@"isUsed"];
+            break;
+        }
+    }
+}
+
+- (void)sendNotification:(NSString*)fileName withNotification:(NSString*)notificationString
+{
+    THUserNotification *notification = [THUserNotification notification];
+    notification.title = @"Parld";
+    notification.informativeText = [NSString stringWithFormat:@"%@    %@", fileName, notificationString];
+    //设置通知提交的时间
+    notification.deliveryDate = [NSDate dateWithTimeIntervalSinceNow:1];
     
-    [req addValue:[NSString stringWithFormat:@"application/x-www-form-urlencoded"] forHTTPHeaderField: @"Content-Type"];
-    [req setValue:[NSString stringWithFormat:@"%lu", [data length]] forHTTPHeaderField:@"Content-Length"];
-    [req addValue:[fileName lastPathComponent] forHTTPHeaderField:@"HTTP_FILENAME"];
-    [req addValue:[fileName pathExtension] forHTTPHeaderField:@"HTTP_FILETYPE"];
-    [req addValue:[NSString stringWithFormat:@"%lu", [data length]] forHTTPHeaderField:@"HTTP_FILESIZE"];
-    [req setHTTPBody:data];
-    NSURLConnection *connection;
-    connection = [[NSURLConnection alloc]initWithRequest:req delegate:self];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
-    NSHTTPURLResponse *res = (NSHTTPURLResponse *)response;
-    NSLog(@"%@",[res allHeaderFields]);
-    recivedata = [NSMutableData data];
+    THUserNotificationCenter *center = [THUserNotificationCenter notificationCenter];
+    if ([center isKindOfClass:[THUserNotificationCenter class]]) {
+        center.centerType = THUserNotificationCenterTypeBanner;
+    }
+    //删除已经显示过的通知(已经存在用户的通知列表中的)
+    [center removeAllDeliveredNotifications];
+    //递交通知
+    [center deliverNotification:notification];
+    //设置通知的代理
+    [center setDelegate:self];
     
+    [self performSelector:@selector(removeNotification:) withObject:notification afterDelay:5.0];
 }
 
--(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-    [recivedata appendData:data];
+- (void)removeNotification:(NSUserNotification *)notification {
+    [[THUserNotificationCenter notificationCenter] removeDeliveredNotification:notification];
 }
 
--(void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    NSString *receiveStr = [[NSString alloc]initWithData:recivedata encoding:NSUTF8StringEncoding];
-    NSLog(@"%@",receiveStr);
+- (void)userNotificationCenter:(THUserNotificationCenter *)center didActivateNotification:(THUserNotification *)notification {
+    //    [self showMainWindow:nil];
 }
 
--(void)connection:(NSURLConnection *)connection
- didFailWithError:(NSError *)error
-{
-    NSLog(@"%@",[error localizedDescription]);
+
+- (void)userNotificationCenter:(THUserNotificationCenter *)center didDeliverNotification:(THUserNotification *)notification {
+    // do nothing
 }
+
+
+- (BOOL)userNotificationCenter:(THUserNotificationCenter *)center shouldPresentNotification:(THUserNotification *)notification {
+    return YES;
+}
+
+- (void)openInFinder:(NSMenuItem*)item{}
 
 @end
