@@ -19,7 +19,6 @@ NSString * const parldBaseWebSite = @"http://www.parld.com";
 @synthesize LOCK = LOCK;
 @synthesize thread;
 @synthesize webSite;
-@synthesize musicPic = musicPic;
 
 + (ParldInterface *)shareInstance
 {
@@ -48,7 +47,7 @@ NSString * const parldBaseWebSite = @"http://www.parld.com";
         [thread setName:@"ParldInterfaceThread"];
         [thread start];
         [self performSelector:@selector(initWebSite) onThread:thread withObject:nil waitUntilDone:NO];
-
+        //[self initWebSite];
     }
     return self;
 }
@@ -57,21 +56,23 @@ NSString * const parldBaseWebSite = @"http://www.parld.com";
 {
     NSString *urlString=[NSString stringWithFormat:@"%@/api?act=via", parldBaseWebSite];
     request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:urlString]];
-    
-    [request setDelegate:self];
     [request startSynchronous];
     NSError *error;
-    self.webSite = [request responseString];
-    
+    error = [request error];
+    if (!error) {
+        self.webSite = [request responseString];
+    }
+    NSLog(@"%@", ParldWebSite);
     [self performSelector:@selector(getMusicList) onThread:thread withObject:nil waitUntilDone:NO];
     NSURL *url = [NSURL URLWithString:ParldOnLineKey];
     ASIHTTPRequest *req = [ASIHTTPRequest requestWithURL:url];
+    NSLog(@"%@", ParldOnLineKey);
     [req startSynchronous];
     error = [req error];
     if(error) {
-        NSLog(@"%@", error);
+        NSLog(@"init%@\n%@", error, [req responseString]);
     }
-    
+    NSLog(@"%@", [req responseString]);
     SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
     NSArray *dataArray = [NSArray alloc];
     dataArray = [jsonParser objectWithString:[req responseString] error:&error];
@@ -92,15 +93,18 @@ NSString * const parldBaseWebSite = @"http://www.parld.com";
 {
     NSError *error;
     SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+    //NSStringEncoding enc = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);
     musicList = [jsonParser objectWithString:[theRequest responseString] error:&error];
-    NSLog(@"%@", ParldWebSite);
+    if (musicPicNext != nil) {
+        musicPic = musicPicNext;
+    }
     [self performSelector:@selector(getAllMusicPicFunction) onThread:thread withObject:nil waitUntilDone:NO];
 }
 
 - (void)requestFailed:(ASIHTTPRequest*)theRequest
 {
     NSError *error = [theRequest error];
-    NSLog(@"%@", error);
+    NSLog(@"musicList%@", error);
 }
 
 - (void)initMainThread
@@ -119,23 +123,24 @@ NSString * const parldBaseWebSite = @"http://www.parld.com";
     [req startSynchronous];
     NSError *error = [req error];
     if(error) {
-        NSLog(@"%@", error);
+        NSLog(@"online%@", error);
     }
 }
 
 - (void)checkMusicCount:(NSString *)musicKey
 {
-    [self performSelector:@selector(checkMusicCountFunction:) onThread:thread withObject:musicList waitUntilDone:NO];
+    [self performSelector:@selector(checkMusicCountFunction:) onThread:thread withObject:musicKey waitUntilDone:NO];
 }
 
 - (void)checkMusicCountFunction:(NSString *)musicKey
 {
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", ParldMusicCount, musicKey]];
     ASIHTTPRequest *req = [ASIHTTPRequest requestWithURL:url];
+    NSLog(@"%@%@", ParldMusicCount, musicKey);
     [req startSynchronous];
     NSError *error = [req error];
     if(error) {
-        NSLog(@"%@", error);
+        NSLog(@"musicCount%@", error);
     }
 }
 
@@ -150,7 +155,7 @@ NSString * const parldBaseWebSite = @"http://www.parld.com";
     for (NSDictionary* musicInfo in musicList) {
         [tempPic setObject:[self getMusicPicFunction:[musicInfo valueForKey:@"hash"]] forKey:[musicInfo valueForKey:@"hash"]];
     }
-    musicPic = [NSDictionary dictionaryWithDictionary:tempPic];
+    musicPicNext = [NSDictionary dictionaryWithDictionary:tempPic];
 }
 
 - (NSData*)getMusicPicFunction:(NSString *)musicKey
@@ -160,7 +165,7 @@ NSString * const parldBaseWebSite = @"http://www.parld.com";
     [req startSynchronous];
     NSError *error = [req error];
     if(error) {
-        NSLog(@"%@", error);
+        NSLog(@"musicPic%@", error);
     }
     return [req responseData];
 }
@@ -174,6 +179,7 @@ NSString * const parldBaseWebSite = @"http://www.parld.com";
     NSURL *url = [NSURL URLWithString:ParldMusicList];
     ASIHTTPRequest *req = [ASIHTTPRequest requestWithURL:url];
     [req setDelegate:self];
+    req.defaultResponseEncoding = NSUTF8StringEncoding;
     [req startAsynchronous];
     return temp;
 }
@@ -185,13 +191,16 @@ NSString * const parldBaseWebSite = @"http://www.parld.com";
     [req startSynchronous];
     NSError *error = [req error];
     if(error) {
-        NSLog(@"%@", error);
+        NSLog(@"openAnimation%@", error);
     }
     return [req responseString];
 }
 
-- (NSArray*)checkUpdate
+- (NSDictionary*)checkUpdate
 {
+    if (updateData) {
+        return updateData;
+    }
     NSBundle *bundle = [ NSBundle mainBundle ];
     //NSString *plistPath = [bundle pathForResource:@"info" ofType:@"plist"];
     NSDictionary *plistData = [bundle infoDictionary];
@@ -200,7 +209,7 @@ NSString * const parldBaseWebSite = @"http://www.parld.com";
     [req startSynchronous];
     NSError *error = [req error];
     if(error) {
-        NSLog(@"%@", error);
+        NSLog(@"update%@", error);
     }
 
     SBJsonParser *jsonParser = [[SBJsonParser alloc] init];

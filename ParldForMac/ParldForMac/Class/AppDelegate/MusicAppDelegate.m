@@ -24,15 +24,15 @@
     //TransformProcessType(&psn, kProcessTransformToForegroundApplication);
     //SetFrontProcess(&psn);
     
-    [self.panel setViewsNeedDisplay:YES];
+    //[self.panel setViewsNeedDisplay:YES];
     [self.panel.contentView setWantsLayer:YES];
     self.panel.backgroundColor = [NSColor clearColor];
     [self.panel setOpaque:NO];
     [NSApp activateIgnoringOtherApps:YES];
     
-    [[NSUserDefaults standardUserDefaults] registerDefaults:
-     [NSDictionary dictionaryWithContentsOfFile:
-      [[NSBundle mainBundle] pathForResource:@"ParldConfig" ofType:@"plist"]]];
+    //[[NSUserDefaults standardUserDefaults] registerDefaults:
+     //[NSDictionary dictionaryWithContentsOfFile:
+      //[[NSBundle mainBundle] pathForResource:@"ParldConfig" ofType:@"plist"]]];
     
     keyTap = [[SPMediaKeyTap alloc] initWithDelegate:self];
 	if([SPMediaKeyTap usesGlobalMediaKeyTap])
@@ -42,7 +42,8 @@
     showProgress = NO;
     
     [[MusicProgressPanel shareInstance] addObserver:self forKeyPath:@"usedProgress" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
-    [ParldInterface shareInstance];
+    [[MusicControl shareMusicControl] performSelectorInBackground:@selector(checkUpdate) withObject:nil];
+    [self observeValueForKeyPath:@"displaySuspension" ofObject:nil change:nil context:nil];
 }
 
 -(void)mediaKeyTap:(SPMediaKeyTap*)keyTap receivedMediaKeyEvent:(NSEvent*)event;
@@ -141,6 +142,9 @@
     }
     else if ([item tag] == MenuUpload) {
         [self showProgressPanel];
+    }
+    else if ([item tag] == MenuHelp) {
+        [[MusicControl shareMusicControl] sendNotification];
     }
     else {
         [[MenuList shareInstance] menuAction:item];

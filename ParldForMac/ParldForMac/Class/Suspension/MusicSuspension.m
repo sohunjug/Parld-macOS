@@ -36,7 +36,8 @@
 	return NSDragOperationNone;
 }
 
--(BOOL)prepareForDragOperation:(id<NSDraggingInfo>)sender{
+-(BOOL)prepareForDragOperation:(id<NSDraggingInfo>)sender
+{
     NSPasteboard *zPasteboard = [sender draggingPasteboard];
     NSArray *list = [zPasteboard propertyListForType:NSFilenamesPboardType];
     if(self.musicControl && [self.musicControl respondsToSelector:@selector(dragDropFileList:)])
@@ -46,14 +47,27 @@
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
-    CAKeyframeAnimation *pulse = [CAKeyframeAnimation animationWithKeyPath:@"contents"];
-    pulse.duration = 0.2;
-    pulse.repeatCount = 1;
-    pulse.autoreverses = YES;
+    CABasicAnimation *FlipAnimation=[CABasicAnimation animationWithKeyPath:@"transform.rotation"];
+	FlipAnimation.timingFunction= [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+	FlipAnimation.toValue= [NSNumber numberWithFloat:M_PI];
+	FlipAnimation.duration=0.3;
+	//FlipAnimation.fillMode=kCAFillModeForwards;
+    FlipAnimation.autoreverses = YES;
     
-    pulse.values = [NSArray arrayWithObjects:[NSImage imageNamed:@"B.png"],nil];
-    [self.layer addAnimation:pulse forKey:nil];
+	[self.layer addAnimation:FlipAnimation forKey:nil];
+    
     [[MusicControl shareMusicControl] playOrPause];
+}
+
+- (CGImageRef)NSImageToCGImageRef:(NSImage*)image;
+{
+    NSData * imageData = [image TIFFRepresentation];
+    CGImageRef imageRef;
+    CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)CFBridgingRetain(imageData),  NULL);
+    
+    imageRef = CGImageSourceCreateImageAtIndex(
+                                               imageSource, 0, NULL);
+    return imageRef;
 }
 
 - (void)mouseEntered:(NSEvent *)theEvent
@@ -85,11 +99,18 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
+    [self.window.contentView setWantsLayer:YES];
     [self setMenu:[[MenuList shareInstance] suspensionMenu]];
+    [[InterfaceAnimation shareInstance] setMainView:self];
     if ([[MenuList shareInstance] displaySuspension]) {
         [self.window orderOut:nil];
     }
     [self createTrackingArea];
+    //self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.x, self.frame.size.width, self.frame.size.height);
+    self.layer.masksToBounds = YES;
+    self.layer.cornerRadius = self.frame.size.height/2;
+    self.layer.anchorPoint = CGPointMake(0.5, 0.5);
+    self.layer.position = CGPointMake(W, W);
 }
 
 @end

@@ -23,31 +23,39 @@ static InterfaceAnimation * _interface_animation_;
         //[self hideViews];
         help = [[MusicButtonView alloc] initWithFrame:NSMakeRect(W-WO, W+WC, WO*2.3, WO*1.7)];
         [help setImage:[NSImage imageNamed:[NSString stringWithFormat:@"P4_4.png"]]];
+        [help setAlternateImage:help.image];
         [help setTag:MenuHelp];
         [help setBordered:NO];
         [[help cell] setImageScaling:NSImageScaleAxesIndependently];
         [help setAction:@selector(menuAction:)];
         last = [[MusicButtonView alloc] initWithFrame:NSMakeRect(W-WC-WO*2-3, W-WO, WO*2, WO*2)];
         [last setImage:[NSImage imageNamed:[NSString stringWithFormat:@"P4_2.png"]]];
+        [last setAlternateImage:last.image];
         [last setTag:MenuLast];
         [last setBordered:NO];
         [[last cell] setImageScaling:NSImageScaleAxesIndependently];
         [last setAction:@selector(menuAction:)];
         next = [[MusicButtonView alloc] initWithFrame:NSMakeRect(W+WC+3, W-WO, WO*2, WO*2)];
         [next setImage:[NSImage imageNamed:[NSString stringWithFormat:@"P4_1.png"]]];
+        [next setAlternateImage:next.image];
         [next setTag:MenuNext];
         [next setBordered:NO];
         [[next cell] setImageScaling:NSImageScaleAxesIndependently];
         [next setAction:@selector(menuAction:)];
         refresh = [[MusicButtonView alloc] initWithFrame:NSMakeRect(W-WO, W-WC-WO*2, WO*2, WO*2)];
         [refresh setImage:[NSImage imageNamed:[NSString stringWithFormat:@"P4_3.png"]]];
+        [refresh setAlternateImage:refresh.image];
         [refresh setTag:MenuRefresh];
         [refresh setBordered:NO];
         [[refresh cell] setImageScaling:NSImageScaleAxesIndependently];
         [refresh setAction:@selector(menuAction:)];
+        [help setHidden:YES];
+        [last setHidden:YES];
+        [next setHidden:YES];
+        [refresh setHidden:YES];
         
         _isDisplay = NO;
-        done = YES;
+        done = NO;
         
         [self addObserver:self forKeyPath:@"isDisplay" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
     }
@@ -78,7 +86,14 @@ static InterfaceAnimation * _interface_animation_;
 
 - (void)showMenu
 {
-    if (done)
+    if (!done) {
+        [self.parentView addSubview:help];
+        [self.parentView addSubview:last];
+        [self.parentView addSubview:next];
+        [self.parentView addSubview:refresh];
+        done = YES;
+    }
+    if ([help isHidden])
         [self showViews];
     
     [self cancelHide];
@@ -105,29 +120,29 @@ static InterfaceAnimation * _interface_animation_;
     if (!help) return;
         @synchronized(self){
             [self animationHide:help withPoint:NSMakePoint(W-WO, W+WC) forObject:@"help"];
-            [self animationHide:last withPoint:NSMakePoint(W-WC-WO*2-3, W-WO) forObject:@"previous"];
+            [self animationHide:last withPoint:NSMakePoint(W-WC-WO*2, W-WO) forObject:@"previous"];
             [self animationHide:refresh withPoint:NSMakePoint(W-WO, W-WC-WO*2) forObject:@"refresh"];
-            [self animationHide:next withPoint:NSMakePoint(W+WC+3, W-WO) forObject:@"next"];
-            done = YES;
+            [self animationHide:next withPoint:NSMakePoint(W+WC, W-WO) forObject:@"next"];
         }
 }
 
 - (void)showViews
 {
         @synchronized(self){
-            [self animationShow:help withPoint:NSMakePoint(W-WC-WO*2-3, W-WO) forObject:@"help"];
+            [self animationShow:help withPoint:NSMakePoint(W-WC-WO*2, W-WO) forObject:@"help"];
             [self animationShow:last withPoint:NSMakePoint(W-WO, W-WC-WO*2) forObject:@"previous"];
-            [self animationShow:refresh withPoint:NSMakePoint(W+WC+3, W-WO) forObject:@"refresh"];
+            [self animationShow:refresh withPoint:NSMakePoint(W+WC, W-WO) forObject:@"refresh"];
             [self animationShow:next withPoint:NSMakePoint(W-WO, W+WC) forObject:@"next"];
-            done = NO;
         }
 }
 
 - (void)animationShow:(NSView*)view withPoint:(NSPoint)point forObject:(NSString *)name
 {
+    //[view removeFromSuperview];
+    [view setHidden:NO];
+    [view.layer removeAllAnimations];
     BOOL custom = [[NSUserDefaults standardUserDefaults] boolForKey:@"cool"];
     NSRect temp = ((NSImageView*)view).frame;
-    [self.parentView addSubview:view];
     CAKeyframeAnimation *keyframeAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
     keyframeAnimation.duration = 0.3;
     keyframeAnimation.repeatCount = 1;
@@ -166,6 +181,7 @@ static InterfaceAnimation * _interface_animation_;
 
 - (void)animationHide:(NSView*)view withPoint:(NSPoint)point  forObject:(NSString *)name
 {
+    [view.layer removeAllAnimations];
     BOOL custom = [[NSUserDefaults standardUserDefaults] boolForKey:@"cool"];
     CAKeyframeAnimation *keyframeAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
     keyframeAnimation.duration = 0.3;
@@ -204,10 +220,93 @@ static InterfaceAnimation * _interface_animation_;
 
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
 {
-    [help removeFromSuperview];
-    [last removeFromSuperview];
-    [next removeFromSuperview];
-    [refresh removeFromSuperview];
+    [help setHidden:YES];
+    [last setHidden:YES];
+    [next setHidden:YES];
+    [refresh setHidden:YES];
+}
+
+- (void) beginTimer
+{
+    [self endTimer];
+    self.cdTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(cdAnimationAppear) userInfo:nil repeats:NO];
+}
+
+- (void) endTimer
+{
+    if (self.cdTimer != nil) {
+        [self.cdTimer invalidate];
+        self.cdTimer = nil;
+    }
+}
+
+- (void) cdAnimationAppear
+{
+    self.cdTimer = nil;
+    //[cdView removeFromSuperview];
+    NSImage *tempPic;
+    NSData* pic = [[MusicControlValue shareInstance] getMusicPic];
+    if (pic == nil) tempPic = [NSImage imageNamed:@"B-NoShadow"];
+    else tempPic = [[NSImage alloc] initWithData:pic];
+    CATransition *transition = [CATransition animation];
+    transition.duration = 0.75;
+    transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    //随机显示一种效果
+    transition.type = kCATransitionFade;
+    transition.delegate = self;
+    [self.mainView.layer addAnimation:transition forKey:nil];
+
+    [self.mainView setImage:tempPic];
+    //[self.mainView.superview addSubview:cdView];
+}
+
+- (void) restartCDAnimation
+{
+    [self.mainView.layer removeAnimationForKey:@"rotationAnimation"];
+    [self startCDAnimation];
+}
+
+- (void) startCDAnimation
+{
+//    CABasicAnimation* rotationAnimation;
+//    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+//    rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0 ];
+//    rotationAnimation.duration = 120.0;
+//    rotationAnimation.cumulative = YES;
+//    rotationAnimation.repeatCount = 100;
+    //self.mainView.layer.anchorPoint = CGPointMake(0.5, 0.5);
+    //self.mainView.layer.position = CGPointMake(W, W);
+    
+	CABasicAnimation *FlipAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation"];
+	FlipAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+	FlipAnimation.toValue = [NSNumber numberWithFloat:-M_PI*2.0];
+	FlipAnimation.duration = 120.0f;
+    FlipAnimation.cumulative = YES;
+    FlipAnimation.repeatCount = FLT_MAX;
+
+    [self.mainView.layer addAnimation:FlipAnimation forKey:@"rotationAnimation"];
+}
+
+- (void) stopCDAnimation
+{
+    [self.mainView.layer removeAllAnimations];
+}
+
+- (void) pauseCDAnimation
+{
+    CFTimeInterval pausedTime = [self.mainView.layer convertTime:CACurrentMediaTime() fromLayer:nil];
+    self.mainView.layer.speed = 0.0;
+    self.mainView.layer.timeOffset = pausedTime;
+}
+
+- (void) resumeCDAnimation
+{
+    CFTimeInterval pausedTime = [self.mainView.layer timeOffset];
+    self.mainView.layer.speed = 1.0;
+    self.mainView.layer.timeOffset = 0.0;
+    self.mainView.layer.beginTime = 0.0;
+    CFTimeInterval timeSincePause = [self.mainView.layer convertTime:CACurrentMediaTime() fromLayer:nil] - pausedTime;
+    self.mainView.layer.beginTime = timeSincePause;
 }
 
 @end

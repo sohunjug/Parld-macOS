@@ -27,7 +27,10 @@ typedef enum {
     MenuUpload,
     MenuUploadDone,
     MenuUploadFail,
-    MenuUploadWaiting
+    MenuUploadWaiting,
+    MenuTheme,
+    MenuSimple,
+    MenuCool
 }MMenuListAction;
 
 @interface MenuList : NSObject
@@ -39,7 +42,7 @@ typedef enum {
     BOOL _displaySuspension;
     BOOL _playAtLaunch;
     BOOL _launchAtLogin;
-    
+    BOOL _theme;
     LaunchAtLoginController *launchAtLoginController;
 }
 
@@ -48,6 +51,7 @@ typedef enum {
 @property (assign) BOOL displaySuspension;
 @property (assign) BOOL playAtLaunch;
 @property (assign) BOOL launchAtLogin;
+@property (assign) BOOL theme;
 
 + (MenuList*)shareInstance;
 - (BOOL)validateMenuItem:(NSMenuItem *)item;

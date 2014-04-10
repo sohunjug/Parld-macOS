@@ -18,6 +18,7 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
+    [self setLevel:NSFloatingWindowLevel];
     [self createPanelToDisplay];
     [self displayVersionInfo];
     [self loadTextToScroll];

@@ -679,6 +679,14 @@
                             <outlet property="musicControl" destination="494" id="pFL-7D-m3f"/>
                         </connections>
                     </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="NKq-1V-i2s" customClass="MusicSuspension">
+                        <rect key="frame" x="38" y="38" width="64" height="64"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="CD-NoShadow" id="DtD-Bj-pAB"/>
+                        <connections>
+                            <outlet property="musicControl" destination="494" id="yl9-cU-OPP"/>
+                        </connections>
+                    </imageView>
                 </subviews>
             </view>
         </window>
@@ -756,5 +764,6 @@
     </objects>
     <resources>
         <image name="B-NoShadow" width="256" height="256"/>
+        <image name="CD-NoShadow" width="380" height="380"/>
     </resources>
 </document>

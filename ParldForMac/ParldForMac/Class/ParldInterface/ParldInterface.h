@@ -27,8 +27,9 @@ extern NSString * const parldBaseWebSite;
 {
     NSThread *thread;
     NSArray *musicList;
-    NSArray *updateData;
+    NSDictionary *updateData;
     NSDictionary *musicPic;
+    NSDictionary *musicPicNext;
     NSString *webSite;
     NSString *onlineKey;
     ASIHTTPRequest *request;
@@ -40,7 +41,6 @@ extern NSString * const parldBaseWebSite;
 @property (retain) NSString *webSite;
 @property (retain) NSThread *thread;
 @property (retain) NSLock *LOCK;
-@property (retain) NSDictionary *musicPic;
 
 + (ParldInterface*)shareInstance;
 + (NSString*)WebSite;
@@ -52,6 +52,6 @@ extern NSString * const parldBaseWebSite;
 - (NSString*)getOpenAnimationWithWidth:(CGFloat)width withHeight:(CGFloat)height;
 - (void)checkMusicCount:(NSString*)musicKey;
 - (void)beginOnline;
-- (NSArray*)checkUpdate;
+- (NSDictionary*)checkUpdate;
 - (NSString*)getDownload;
 @end

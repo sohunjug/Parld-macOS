@@ -15,12 +15,22 @@
     MusicButtonView *last;
     MusicButtonView *next;
     MusicButtonView *refresh;
+    IBOutlet NSImageView *cdView;
     BOOL _isDisplay;
     BOOL done;
 }
 
 @property (retain) NSView* parentView;
+@property (retain) NSImageView* mainView;
 @property (assign) BOOL isDisplay;
+@property (nonatomic) CGAffineTransform cdOriginalTranform;
+@property (nonatomic, strong) NSTimer *cdTimer;
 
 + (InterfaceAnimation*)shareInstance;
+- (void)beginTimer;
+- (void)restartCDAnimation;
+- (void)startCDAnimation;
+- (void)stopCDAnimation;
+- (void)pauseCDAnimation;
+- (void)resumeCDAnimation;
 @end

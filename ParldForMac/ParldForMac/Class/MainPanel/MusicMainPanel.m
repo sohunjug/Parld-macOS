@@ -16,6 +16,7 @@
     [super awakeFromNib];
     [self setStyleMask:NSBorderlessWindowMask | NSNonactivatingPanelMask];
     [self setLevel:NSMainMenuWindowLevel];
+    [[self contentView] setWantsLayer:YES];
 }
 
 - (BOOL)canBecomeKeyWindow {

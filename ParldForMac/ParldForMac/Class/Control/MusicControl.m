@@ -7,7 +7,9 @@
 //
 
 #import "MusicControl.h"
+#import "MenuList.h"
 #import "ParldInterface.h"
+#import "InterfaceAnimation.h"
 
 static MusicControl *musicControl;
 static MusicControlValue * _Music_Control_Value_;
@@ -25,11 +27,8 @@ static MusicControlValue * _Music_Control_Value_;
 {
     if (self = [super init]) {
         [self refresh];
-        [[NSUserDefaults standardUserDefaults] registerDefaults:
-         [NSDictionary dictionaryWithContentsOfFile:
-          [[NSBundle mainBundle] pathForResource:@"ParldConfig" ofType:@"plist"]]];
         
-        playAtLaunch = [[NSUserDefaults standardUserDefaults] boolForKey:@"playAtLaunch"];
+        playAtLaunch = [[MenuList shareInstance] playAtLaunch];
     }
     return self;
 }
@@ -48,6 +47,11 @@ static MusicControlValue * _Music_Control_Value_;
     nowState = MusicInit;
     lastState = MusicInit;
     musicList = [[ParldInterface shareInstance] getMusicList];
+}
+
+- (NSData*)getMusicPic
+{
+    return [[ParldInterface shareInstance] getMusicPic:[[[[MusicControlValue shareInstance] musicList] objectAtIndex:[[MusicControlValue shareInstance] playIndex]] valueForKey:@"hash"]];
 }
 
 @end
@@ -75,8 +79,7 @@ static MusicControlValue * _Music_Control_Value_;
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if([keyPath isEqualToString:@"nowState"])
-    {
+    if([keyPath isEqualToString:@"nowState"]) {
         switch ([[MusicControlValue shareInstance] nowState]) {
             case MusicPlaying:
                 if (MusicPause == [[MusicControlValue shareInstance] lastState]) {
@@ -99,10 +102,9 @@ static MusicControlValue * _Music_Control_Value_;
                 break;
         }
         [[MusicControlValue shareInstance] setLastState:[[MusicControlValue shareInstance] nowState]];
-        if ([[[MusicControlValue shareInstance] musicList] count] != 0 || [[MusicControlValue shareInstance] nowState] == MusicStop) [self sendNotification];
+        if ([[[MusicControlValue shareInstance] musicList] count] != 0 && [[MusicControlValue shareInstance] nowState] != MusicStop) [self sendNotification];
     }
-    else
-    {
+    else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
@@ -163,7 +165,8 @@ static MusicControlValue * _Music_Control_Value_;
 
 - (BOOL)isLast
 {
-    if ([[MusicControlValue shareInstance] playIndex] == [[[MusicControlValue shareInstance] musicList] count]) {
+    if ([[MusicControlValue shareInstance] playIndex] == [[[MusicControlValue shareInstance] musicList] count] - 1
+        || [[[MusicControlValue shareInstance] musicList] count] == 0) {
         return YES;
     }
     return NO;
@@ -181,10 +184,12 @@ static MusicControlValue * _Music_Control_Value_;
 {
     [self createStreamer];
     if ([[[MusicControlValue shareInstance] musicList] count] == 0) {
-        [self performSelector:@selector(playMusic) withObject:nil afterDelay:0.1];
+        [self performSelector:@selector(next) withObject:nil afterDelay:0.1];
         //[self removeNotification:[THUserNotification notification]];
     }
     [[[MusicControlValue shareInstance] streamer] start];
+    [[InterfaceAnimation shareInstance] beginTimer];
+    [[InterfaceAnimation shareInstance] restartCDAnimation];
 }
 
 - (void)pauseMusic
@@ -207,7 +212,9 @@ static MusicControlValue * _Music_Control_Value_;
     
 	NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"%@/%@", ParldWebSite, (NSString*)[[[[MusicControlValue shareInstance] musicList] objectAtIndex:[[MusicControlValue shareInstance] playIndex]] valueForKey:@"url"]]];
 	[[MusicControlValue shareInstance] setStreamer:[[AudioStreamer alloc] initWithURL:url]];
-	
+	NSLog(@"key=%@", [[[[MusicControlValue shareInstance] musicList] objectAtIndex:[[MusicControlValue shareInstance] playIndex]] valueForKey:@"hash"]);
+    [[ParldInterface shareInstance] checkMusicCount:[[[[MusicControlValue shareInstance] musicList] objectAtIndex:[[MusicControlValue shareInstance] playIndex]] valueForKey:@"hash"]];
+    
 	[[NSNotificationCenter defaultCenter]
      addObserver:self
      selector:@selector(playbackStateChanged:)
@@ -251,9 +258,9 @@ static MusicControlValue * _Music_Control_Value_;
     THUserNotification *notification = [THUserNotification notification];
     notification.title = @"Parld";
     notification.informativeText = [NSString stringWithFormat:@"[%@] %@ - %@", [[MusicControlValue shareInstance] nowState] == MusicPlaying ? NSLocalizedString(@"play", nil) : NSLocalizedString(@"stop", nil), (NSString*)[[[[MusicControlValue shareInstance] musicList] objectAtIndex:[[MusicControlValue shareInstance] playIndex]] valueForKey:@"name"], (NSString*)[[[[MusicControlValue shareInstance] musicList] objectAtIndex:[[MusicControlValue shareInstance] playIndex]] valueForKey:@"artist"]];
-    if ([[[ParldInterface shareInstance] musicPic] valueForKey:[[[[MusicControlValue shareInstance] musicList] objectAtIndex:[[MusicControlValue shareInstance] playIndex]] valueForKey:@"hash"]] != nil) {
+    if ([[MusicControlValue shareInstance] getMusicPic] != nil) {
         //[suspensionView setImage:[[NSImage alloc] initWithData:self.musicpic]];
-        notification.contentImage = [[NSImage alloc] initWithData:[[[ParldInterface shareInstance] musicPic] valueForKey:[[[[MusicControlValue shareInstance] musicList] objectAtIndex:[[MusicControlValue shareInstance] playIndex]] valueForKey:@"hash"]]];
+        notification.contentImage = [[NSImage alloc] initWithData:[[MusicControlValue shareInstance] getMusicPic]];
     }
     //设置通知提交的时间
     notification.deliveryDate = [NSDate dateWithTimeIntervalSinceNow:1];
@@ -289,5 +296,38 @@ static MusicControlValue * _Music_Control_Value_;
     return YES;
 }
 
+- (void)updateProgram
+{
+    NSMutableString *infoTemp = [[NSMutableString alloc] initWithString:[[[ParldInterface shareInstance] checkUpdate] valueForKey:@"info"]];
+    [infoTemp replaceOccurrencesOfString:@"</br>" withString:@"\n" options:NSLiteralSearch range:NSMakeRange(0, [[[[ParldInterface shareInstance] checkUpdate] valueForKey:@"info"] length])];
+    
+    NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"update", nil)
+                                     defaultButton:NSLocalizedString(@"download", nil)
+                                   alternateButton:NSLocalizedString(@"next time", nil)
+                                       otherButton:nil
+                         informativeTextWithFormat:@"%@\n%@ %@\n%@", NSLocalizedString(@"new", nil), @"Version ", [[[ParldInterface shareInstance] checkUpdate] valueForKey:@"version_string"], infoTemp];
+    NSInteger button = [alert runModal];
+    
+    if (button == NSAlertDefaultReturn) {
+        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[[NSString alloc] initWithFormat:@"%@/%@", ParldWebSite, [[ParldInterface shareInstance] getDownload]]]];
+        NSMenuItem *temp = [[NSMenuItem alloc] init];
+        [temp setTag:MenuExit];
+        [[MenuList shareInstance] menuAction:temp];
+    } else if (button == NSAlertAlternateReturn) {
+        return;
+    } else {
+        return;
+    }
+}
+
+- (void)checkUpdate
+{
+    void (^block)(void) = ^(){
+        if ([[[ParldInterface shareInstance] checkUpdate] count]) {
+            [self updateProgram];
+        }
+    };
+    block();
+}
 
 @end

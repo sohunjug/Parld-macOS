@@ -18,6 +18,7 @@ static MenuList * _menuList;
 @synthesize displaySuspension = _displaySuspension;
 @synthesize playAtLaunch = _playAtLaunch;
 @synthesize launchAtLogin = _launchAtLogin;
+@synthesize theme = _theme;
 
 - (id)init
 {
@@ -39,15 +40,20 @@ static MenuList * _menuList;
 
 - (void)initStatusItem
 {
+    [[NSUserDefaults standardUserDefaults] registerDefaults:
+     [NSDictionary dictionaryWithContentsOfFile:
+      [[NSBundle mainBundle] pathForResource:@"ParldConfig" ofType:@"plist"]]];
+    
     self.displaySuspension = [[NSUserDefaults standardUserDefaults] boolForKey:@"displaySuspension"];
     self.playAtLaunch = [[NSUserDefaults standardUserDefaults] boolForKey:@"playAtLaunch"];
+    self.theme = [[NSUserDefaults standardUserDefaults] boolForKey:@"cool"];
     self.launchAtLogin = launchAtLoginController.launchAtLogin;
     
     [self addObserver:self forKeyPath:@"displaySuspension" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
     [self addObserver:self forKeyPath:@"playAtLaunch" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
     [self addObserver:self forKeyPath:@"launchAtLogin" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
+    [self addObserver:self forKeyPath:@"theme" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
     [self addObserver:[[NSApplication sharedApplication] delegate] forKeyPath:@"displaySuspension" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
-    
     statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
     
     [statusItem setImage:[NSImage imageNamed:@"systemBar"]];
@@ -123,6 +129,21 @@ static MenuList * _menuList;
     [newItem setTag:MenuDisplaySuspension];
     [listTemp setObject:newItem forKey:@"displaySuspension"];
     
+    newItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:NSLocalizedString(@"theme", nil) action:NULL keyEquivalent:@""];
+    [newItem setEnabled:YES];
+    [newItem setTag:MenuTheme];
+    [listTemp setObject:newItem forKey:@"theme"];
+    
+    newItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:NSLocalizedString(@"simple", nil) action:@selector(menuAction:) keyEquivalent:@""];
+    [newItem setEnabled:YES];
+    [newItem setTag:MenuSimple];
+    [listTemp setObject:newItem forKey:@"simple"];
+    
+    newItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:NSLocalizedString(@"cool", nil) action:@selector(menuAction:) keyEquivalent:@""];
+    [newItem setEnabled:YES];
+    [newItem setTag:MenuCool];
+    [listTemp setObject:newItem forKey:@"cool"];
+    
     newItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:NSLocalizedString(@"about", nil) action:@selector(menuAction:) keyEquivalent:@""];
     [newItem setEnabled:YES];
     [newItem setTag:MenuAbout];
@@ -158,6 +179,11 @@ static MenuList * _menuList;
     [suspensionMenu addItem:[[menuList objectForKey:@"upload"] copy]];
     [suspensionMenu addItem:[NSMenuItem separatorItem]];
     [suspensionMenu addItem:[[menuList objectForKey:@"displaySuspension"] copy]];
+    [suspensionMenu addItem:[menuList objectForKey:@"theme"]];
+    NSMenu* subMenu = [[NSMenu alloc] initWithTitle:@"theme"];
+    [subMenu addItem:[menuList objectForKey:@"simple"]];
+    [subMenu addItem:[menuList objectForKey:@"cool"]];
+    [suspensionMenu setSubmenu:subMenu forItem:[menuList objectForKey:@"theme"]];
     [suspensionMenu addItem:[[menuList objectForKey:@"about"] copy]];
     [suspensionMenu addItem:[[menuList objectForKey:@"exit"] copy]];
 }
@@ -174,6 +200,9 @@ static MenuList * _menuList;
     }
     else if ([keyPath isEqualToString:@"launchAtLogin"]) {
         launchAtLoginController.launchAtLogin = self.launchAtLogin;
+    }
+    else if ([keyPath isEqualToString:@"theme"]) {
+        [[NSUserDefaults standardUserDefaults] setBool:self.theme forKey:@"cool"];
     }
     else
     {
@@ -213,7 +242,7 @@ static MenuList * _menuList;
 
 - (void)gotoOnline
 {
-    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/", ParldWebSite]]];
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/", parldBaseWebSite]]];
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)item
@@ -237,6 +266,12 @@ static MenuList * _menuList;
     }
     else if ([item tag] == MenuNext || [item tag] == MenuLast) {
         [item setHidden:[[MusicControlValue shareInstance] nowState] != MusicInit ? NO : YES ];
+    }
+    else if ([item tag] == MenuSimple) {
+        [item setState:(self.theme ? NSOnState : NSOffState)];
+    }
+    else if ([item tag] == MenuCool) {
+        [item setState:(self.theme ? NSOffState : NSOnState)];
     }
     return YES;
 }
@@ -272,6 +307,12 @@ static MenuList * _menuList;
     }
     else if ([item tag] == MenuPlayAtLaunch) {
         self.playAtLaunch = self.playAtLaunch ? NO : YES;
+    }
+    else if ([item tag] == MenuSimple) {
+        self.theme = YES;
+    }
+    else if ([item tag] == MenuCool) {
+        self.theme = NO;
     }
     else if ([item tag] == MenuExit) {
         [NSApp terminate:nil];

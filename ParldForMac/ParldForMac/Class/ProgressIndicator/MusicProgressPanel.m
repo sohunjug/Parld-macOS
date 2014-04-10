@@ -40,7 +40,7 @@ static MusicProgressPanel * _Music_Progress_Panel_;
     [title setBordered:NO];
     [title setTextColor:[NSColor whiteColor]];
     
-    [title setStringValue:@"Upload Music List:"];
+    [title setStringValue:NSLocalizedString(@"Upload Music List:", nil)];
     [self.view addSubview:title];
     
     NSMutableDictionary* tempProgressDic = [[NSMutableDictionary alloc] initWithCapacity:4];
@@ -134,11 +134,6 @@ static MusicProgressPanel * _Music_Progress_Panel_;
     else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
-}
-
-- (void)openInFinder:(NSMenuItem*)item
-{
-    
 }
 
 @end

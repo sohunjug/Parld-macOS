@@ -36,6 +36,7 @@ typedef enum {
 
 + (MusicControlValue*)shareInstance;
 - (void)refresh;
+- (NSData*)getMusicPic;
 
 @end
 
@@ -49,5 +50,7 @@ typedef enum {
 - (void)refresh;
 - (void)last;
 - (void)next;
+- (void)sendNotification;
+- (void)checkUpdate;
 
 @end
