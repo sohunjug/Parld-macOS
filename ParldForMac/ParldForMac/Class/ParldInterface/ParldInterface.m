@@ -206,6 +206,7 @@ NSString * const parldBaseWebSite = @"http://www.parld.com";
     NSDictionary *plistData = [bundle infoDictionary];
     NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"%@%@", ParldCheckUpdate, [plistData valueForKey:@"CFBundleVersion"]]];
     ASIHTTPRequest *req = [ASIHTTPRequest requestWithURL:url];
+    req.defaultResponseEncoding = NSUTF8StringEncoding;
     [req startSynchronous];
     NSError *error = [req error];
     if(error) {
@@ -275,6 +276,7 @@ NSString * const parldBaseWebSite = @"http://www.parld.com";
 - (void)uploadFailed:(ASIFormDataRequest*)req
 {
     [self performSelector:@selector(sendNotification:withNotification:) withObject:[[req requestHeaders] objectForKey:@"FILENAME"] withObject:@"Fail"];
+    NSLog(@"%@", [req responseString]);
     [LOCK lock];
     [[MusicProgressPanel shareInstance] setUsedProgress:[[MusicProgressPanel shareInstance] usedProgress] - 1];
     [[[[MusicProgressPanel shareInstance] progressPopUpButton] objectForKey:@"Fail"] addItemWithTitle:[[req requestHeaders] objectForKey:@"FILENAME"]];// action:@selector(openInFinder:) keyEquivalent:@""];
@@ -285,6 +287,7 @@ NSString * const parldBaseWebSite = @"http://www.parld.com";
 - (void)uploadFinished:(ASIFormDataRequest*)req
 {
     [self performSelector:@selector(sendNotification:withNotification:) withObject:[[req requestHeaders] objectForKey:@"FILENAME"] withObject:@"Done"];
+    NSLog(@"%@", [req responseString]);
     [LOCK lock];
     [[MusicProgressPanel shareInstance] setUsedProgress:[[MusicProgressPanel shareInstance] usedProgress] - 1];
     [[[[MusicProgressPanel shareInstance] progressPopUpButton] objectForKey:@"Done"] addItemWithTitle:[[req requestHeaders] objectForKey:@"FILENAME"]];// action:@selector(openInFinder:) keyEquivalent:@""];
