@@ -5,36 +5,36 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>C5C2569C-E7BA-43E5-908B-C6DA8E834C7A</string>
+	<string>C6DDC88B-33A5-4D8D-A077-99BB7F7E3137</string>
 	<key>IDESourceControlProjectName</key>
 	<string>ParldForMac</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>75D59D75-11A1-4AB6-9690-3FB2F60DD56D</key>
+		<key>7F6F3932A5B9880C462C6A7225CDCAB29086550C</key>
 		<string>http://git.maxfs.org/git/Parld_team/mac.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>ParldForMac/ParldForMac.xcodeproj/project.xcworkspace</string>
+	<string>ParldForMac/ParldForMac.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>75D59D75-11A1-4AB6-9690-3FB2F60DD56D</key>
+		<key>7F6F3932A5B9880C462C6A7225CDCAB29086550C</key>
 		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>http://git.maxfs.org/git/Parld_team/mac.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>75D59D75-11A1-4AB6-9690-3FB2F60DD56D</string>
+	<string>7F6F3932A5B9880C462C6A7225CDCAB29086550C</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>75D59D75-11A1-4AB6-9690-3FB2F60DD56D</string>
+			<string>7F6F3932A5B9880C462C6A7225CDCAB29086550C</string>
 			<key>IDESourceControlWCCName</key>
-			<string>parld_mac (git)</string>
+			<string>parld_mac%20(git)</string>
 		</dict>
 	</array>
 </dict>

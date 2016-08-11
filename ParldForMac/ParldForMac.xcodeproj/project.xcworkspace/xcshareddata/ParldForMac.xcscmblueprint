@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "7F6F3932A5B9880C462C6A7225CDCAB29086550C",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "7F6F3932A5B9880C462C6A7225CDCAB29086550C" : 0,
+    "AB34840C69513440D47FD5284B2EAA66528F1E6A" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "C6DDC88B-33A5-4D8D-A077-99BB7F7E3137",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "7F6F3932A5B9880C462C6A7225CDCAB29086550C" : "parld_mac%20(git)",
+    "AB34840C69513440D47FD5284B2EAA66528F1E6A" : ""
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "ParldForMac",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "ParldForMac\/ParldForMac.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "http:\/\/git.maxfs.org\/git\/Parld_team\/mac.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7F6F3932A5B9880C462C6A7225CDCAB29086550C"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/git.oschina.net\/sohunjug\/Parld_Project.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "AB34840C69513440D47FD5284B2EAA66528F1E6A"
+    }
+  ]
+}
